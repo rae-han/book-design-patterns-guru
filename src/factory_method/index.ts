@@ -1,93 +1,187 @@
 /**
- * Creator(생성자) 클래스는 Product 클래스의 객체를 반환하는 팩토리 메서드를 선언합니다.
- * Creator의 하위 클래스들이 이 메서드의 실제 구현을 담당합니다.
+ * Creator 클래스는 Product 클래스의 객체를 반환하는 팩토리 메서드를 선언합니다.
+ * Creator의 하위 클래스들이 일반적으로 이 메서드의 구현을 제공합니다.
  */
 abstract class Creator {
-    /**
-     * 팩토리 메서드를 추상 메서드로 선언합니다.
-     * 각 하위 클래스에서 이를 구현하게 됩니다.
-     */
-    public abstract factoryMethod(): Product;
+  /**
+   * Creator는 팩토리 메서드의 기본 구현을 제공할 수도 있습니다.
+   */
+  public abstract factoryMethod(): Product;
 
-    /**
-     * Creator 클래스의 주요 역할은 실제로 제품을 만드는 것이 아닙니다.
-     * 대신 팩토리 메서드를 통해 반환된 Product 객체들을 사용하는
-     * 핵심 비즈니스 로직을 포함합니다.
-     * 
-     * 하위 클래스들은 팩토리 메서드를 오버라이드하여 다른 종류의 제품을
-     * 반환함으로써 이 비즈니스 로직을 간접적으로 변경할 수 있습니다.
-     */
-    public someOperation(): string {
-        // 팩토리 메서드를 호출하여 Product 객체를 생성
-        const product = this.factoryMethod();
-        // 생성된 제품 사용
-        return `생성자: 동일한 생성자의 코드가 ${product.operation()} 와 함께 작동했습니다`;
-    }
+  /**
+   * Creator의 주요 책임이 제품을 생성하는 것이 아님에 주목하세요.
+   * 일반적으로 팩토리 메서드에 의해 반환된 Product 객체에 의존하는 핵심 비즈니스 로직을 포함합니다.
+   * 하위 클래스들은 팩토리 메서드를 오버라이드하고 다른 유형의 제품을 반환함으로써
+   * 간접적으로 이 비즈니스 로직을 변경할 수 있습니다.
+   */
+  public someOperation(): string {
+      // 팩토리 메서드를 호출하여 Product 객체를 생성합니다.
+      const product = this.factoryMethod();
+      // 이제 제품을 사용합니다.
+      return `Creator: 동일한 creator의 코드가 ${product.operation()}와 함께 작동했습니다`;
+  }
 }
+/**
+ * 1. Creator (추상 클래스)
+ * 객체 생성을 위한 팩토리 메서드(factoryMethod) 선언
+ * 핵심 비즈니스 로직(someOperation) 포함
+ * 실제 생성할 객체의 타입은 서브클래스에서 결정
+ */
 
 /**
- * 구체적인 생성자들은 팩토리 메서드를 오버라이드하여
- * 서로 다른 종류의 제품을 반환합니다.
- */
+* Concrete Creators는 팩토리 메서드를 오버라이드하여 
+* 결과 제품의 타입을 변경합니다.
+*/
 class ConcreteCreator1 extends Creator {
-    /**
-     * 참고: 메서드의 시그니처는 여전히 추상 Product 타입을 사용하지만,
-     * 실제로는 구체적인 제품을 반환합니다.
-     * 이를 통해 Creator는 구체적인 제품 클래스들로부터 독립적일 수 있습니다.
-     */
-    public factoryMethod(): Product {
-        return new ConcreteProduct1();
-    }
+  /**
+   * 메서드의 시그니처가 여전히 추상 제품 타입을 사용하고 있음에 주목하세요.
+   * 실제로는 구체적인 제품이 메서드에서 반환되지만,
+   * 이렇게 함으로써 Creator는 구체적인 제품 클래스들로부터 독립적일 수 있습니다.
+   */
+  public factoryMethod(): Product {
+      return new ConcreteProduct1();
+  }
 }
 
 class ConcreteCreator2 extends Creator {
-    public factoryMethod(): Product {
-        return new ConcreteProduct2();
-    }
+  public factoryMethod(): Product {
+      return new ConcreteProduct2();
+  }
 }
+/**
+ * 2. ConcreteCreator (구체적인 생성자 클래스)
+ * 팩토리 메서드를 오버라이딩하여 구체적인 제품 객체 반환
+ */
 
 /**
- * Product 인터페이스는 모든 구체적인 제품들이
- * 구현해야 하는 작업들을 선언합니다.
- */
+* Product 인터페이스는 모든 구체적인 제품들이 구현해야 하는
+* 작업들을 선언합니다.
+*/
 interface Product {
-    operation(): string;
+  operation(): string;
 }
+/**
+ * 3. Product (추상 제품 인터페이스)
+ * 모든 구체적 제품들이 공통적으로 구현해야 할 인터페이스 정의
+ */
 
 /**
- * 구체적인 제품들은 Product 인터페이스의
- * 다양한 구현을 제공합니다.
- */
+* Concrete Products는 Product 인터페이스의 다양한 구현을 제공합니다.
+*/
 class ConcreteProduct1 implements Product {
-    public operation(): string {
-        return '{구체적인 제품1의 결과}';
-    }
+  public operation(): string {
+      return '{ConcreteProduct1의 결과}';
+  }
 }
 
 class ConcreteProduct2 implements Product {
-    public operation(): string {
-        return '{구체적인 제품2의 결과}';
-    }
+  public operation(): string {
+      return '{ConcreteProduct2의 결과}';
+  }
 }
+/**
+ * 4. ConcreteProduct (구체적인 제품 클래스)
+ * 실제 비즈니스 로직을 구현한 클래스들
+ */
 
 /**
- * 클라이언트 코드는 구체적인 생성자의 인스턴스와 작동하지만,
- * 기본 인터페이스를 통해 작업합니다.
- * 클라이언트가 기본 인터페이스를 통해 생성자와 계속 작업하는 한,
- * 어떤 생성자의 하위 클래스도 전달할 수 있습니다.
- */
+* 클라이언트 코드는 기본 인터페이스를 통해 구체적인 creator의 인스턴스와 
+* 작동합니다. 클라이언트가 기본 인터페이스를 통해 creator와 계속 작업하는 한,
+* 어떤 creator의 하위 클래스도 전달할 수 있습니다.
+*/
 function clientCode(creator: Creator) {
-    console.log('클라이언트: 생성자의 클래스를 모르지만, 여전히 작동합니다.');
-    console.log(creator.someOperation());
+  // ...
+  console.log('클라이언트: creator의 클래스를 모르지만, 여전히 작동합니다.');
+  console.log(creator.someOperation());
+  // ...
 }
 
 /**
- * 애플리케이션은 설정이나 환경에 따라
- * 생성자의 타입을 선택합니다.
- */
-console.log('앱: ConcreteCreator1으로 시작합니다.');
-clientCode(new ConcreteCreator1());
+* 애플리케이션은 설정이나 환경에 따라 creator의 타입을 선택합니다.
+*/
+// console.log('앱: ConcreteCreator1으로 실행되었습니다.');
+// const concreteCreator1 = new ConcreteCreator1();
+// const product1 = concreteCreator1.factoryMethod();
+// clientCode(concreteCreator1);
+// console.log('');
+
+// console.log('앱: ConcreteCreator2로 실행되었습니다.');
+// const concreteCreator2 = new ConcreteCreator2();
+// const product2 = concreteCreator2.factoryMethod();
+// clientCode(concreteCreator2);
+// console.log('');
+
+// console.log({ concreteCreator1, concreteCreator2, product1, product2 })
+
+
+// Creator (결제 처리 흐름)
+abstract class PaymentProcessor {
+  public abstract createPaymentMethod(): PaymentMethod;
+
+  // 핵심 비즈니스 로직 (공통 흐름)
+  public processPayment(amount: number): void {
+    const method = this.createPaymentMethod();
+    method.pay(amount); // 실제 결제 처리는 PaymentMethod에게 위임
+  }
+}
+
+// ConcreteCreator (구체적인 결제 방식 선택)
+class CreditCardProcessor extends PaymentProcessor {
+  public createPaymentMethod(): PaymentMethod {
+    return new CreditCardPayment();
+  }
+}
+
+class PayPalProcessor extends PaymentProcessor {
+  public createPaymentMethod(): PaymentMethod {
+    return new PayPalPayment();
+  }
+}
+
+// Product 인터페이스 (결제 방법)
+interface PaymentMethod {
+  pay(amount: number): void;
+}
+
+// ConcreteProduct (실제 결제 방법 구현)
+class CreditCardPayment implements PaymentMethod {
+  pay(amount: number): void {
+    console.log(`신용카드로 ${amount}원을 결제했습니다.`);
+    // 여기에 실제 신용카드 결제 처리 코드가 들어갑니다.
+  }
+}
+
+class PayPalPayment implements PaymentMethod {
+  pay(amount: number): void {
+    console.log(`페이팔로 ${amount}원을 결제했습니다.`);
+    // 여기에 실제 페이팔 결제 처리 코드가 들어갑니다.
+  }
+}
+
+// 클라이언트 코드
+const processor = new CreditCardProcessor();
+processor.processPayment(10000); // 신용카드로 결제
+
+const processor2 = new PayPalProcessor();
+processor2.processPayment(20000); // 페이팔로 결제
+// 여기서는:
+
+// **Creator (PaymentProcessor)**가 전체 흐름(핵심 비즈니스 로직)을 담당하고,
+//**Product (CreditCardPayment, PayPalPayment)**가 실제 작업(실제 비즈니스 로직)을 담당합니다.
+
+function clientPaymentCode(processor: PaymentProcessor, amount: number) {
+  console.log('클라이언트: 프로세서의 구체적인 클래스를 모르지만, 여전히 작동합니다.');
+  processor.processPayment(amount);
+}
+
+console.log('앱: CreditCardProcessor로 실행되었습니다.');
+const creditCardProcessor = new CreditCardProcessor();
+clientPaymentCode(creditCardProcessor, 10000);
 console.log('');
 
-console.log('앱: ConcreteCreator2로 시작합니다.');
-clientCode(new ConcreteCreator2());
+console.log('앱: PayPalProcessor로 실행되었습니다.');
+const payPalProcessor = new PayPalProcessor();
+clientPaymentCode(payPalProcessor, 20000);
+console.log('');
+
+console.log({ creditCardProcessor, payPalProcessor });
