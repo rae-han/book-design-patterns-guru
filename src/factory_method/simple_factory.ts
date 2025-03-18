@@ -9,9 +9,11 @@ const OS = {
 
 type OS = typeof OS[keyof typeof OS]
 
+const isIOS = (os: OS) => os === OS.IOS;
+
 // Without Factory
-const iosButton1 = OS.IOS === 'ios' ? new IOSButton() : new AndroidButton()
-const androidButton1 = OS.ANDROID === 'android' ? new IOSButton() : new AndroidButton()
+const iosButton1 = isIOS(OS.IOS) ? new IOSButton() : new AndroidButton()
+const androidButton1 = isIOS(OS.ANDROID) ? new IOSButton() : new AndroidButton()
 
 console.log({ iosButton1, androidButton1 })
 
@@ -34,3 +36,4 @@ const iosButton2 = factory.createButton(OS.IOS);
 const androidButton2 = factory.createButton(OS.ANDROID);
 
 console.log({ iosButton2, androidButton2 })
+
