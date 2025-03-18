@@ -28,6 +28,18 @@ interface GUIFactory {
  * 이 팩토리는 결과 제품들의 호환을 보장한다. 
  * 구상 팩토리 메서드의 시그니처들은 추상 제품을 반환하는 반면, 메서드 내부에서는 구상 제품이 인스턴스화된다.
  */
+// 맥용 GUI 팩토리 
+// 각 구상 팩토리에는 해당하는 제품 변형이 있다.
+class MacFactory implements GUIFactory {
+  public createButton(): Button {
+    return new MacButton();
+  }
+
+  public createCheckbox(): Checkbox {
+    return new MacCheckbox();
+  }
+}
+
 // 윈도우용 GUI 팩토리 
 class WindowsFactory implements GUIFactory {
   public createButton(): Button {
@@ -39,20 +51,12 @@ class WindowsFactory implements GUIFactory {
   }
 }
 
-// 맥용 GUI 팩토리 // 각 구상 팩토리에는 해당하는 제품 변형이 있다.
-class MacFactory implements GUIFactory {
-  public createButton(): Button {
-    return new MacButton();
-  }
-
-  public createCheckbox(): Checkbox {
-    return new MacCheckbox();
-  }
-}
-
 /**
  *  3. Abstract Product (추상 제품)
  * 버튼과 체크박스의 공통 인터페이스를 정의
+ * 
+ * 제품 패밀리의 각 개별 제품에는 기초 인터페이스가 있어야 한다.
+ * 이 제품의 모든 변형은 이 인터페이스를 구현해야 한다.
  */
 // 버튼 인터페이스
 interface Button {
@@ -68,6 +72,14 @@ interface Checkbox {
  * 4. Concrete Product (구체적인 제품)
  * 운영 체제별로 버튼과 체크박스를 구현
  */
+// 맥용 버튼
+// 구상 제품들은 해당하는 구상 팩토리에서 생성됩니다.
+class MacButton implements Button {
+  public render(): void {
+    console.log("맥 스타일 버튼을 렌더링합니다.");
+  }
+}
+
 // 윈도우용 버튼
 class WindowsButton implements Button {
   public render(): void {
@@ -75,10 +87,9 @@ class WindowsButton implements Button {
   }
 }
 
-// 맥용 버튼
-class MacButton implements Button {
+class MacCheckbox implements Checkbox {
   public render(): void {
-    console.log("맥 스타일 버튼을 렌더링합니다.");
+    console.log("맥 스타일 체크박스를 렌더링합니다.");
   }
 }
 
@@ -90,11 +101,7 @@ class WindowsCheckbox implements Checkbox {
 }
 
 // 맥용 체크박스
-class MacCheckbox implements Checkbox {
-  public render(): void {
-    console.log("맥 스타일 체크박스를 렌더링합니다.");
-  }
-}
+
 
 /**
  * 5. Client Code (클라이언트 코드)
@@ -111,13 +118,13 @@ function clientCode(factory: GUIFactory) {
 /**
  * 실행 코드
  */
-console.log("앱: 윈도우 팩토리로 실행합니다.");
-const windowsFactory = new WindowsFactory();
-clientCode(windowsFactory);
-
 console.log("\n앱: 맥 팩토리로 실행합니다.");
 const macFactory = new MacFactory();
 clientCode(macFactory);
+
+console.log("앱: 윈도우 팩토리로 실행합니다.");
+const windowsFactory = new WindowsFactory();
+clientCode(windowsFactory);
 
 /**
  * 역할	설명	예시
